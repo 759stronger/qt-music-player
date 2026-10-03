@@ -12,7 +12,7 @@
 
 *主题插画用于呈现项目风格，不是程序运行截图。*
 
-本项目是一个仿 QQ 音乐界面风格的桌面应用学习作品，重点是本地音频播放、信号与槽、组件化界面和 SQLite 状态保存。项目展示名与仓库名使用 **Qt Music Player / qt-music-player**；源码工程和可执行文件仍保留历史名称 `Video_to_MP3_music`。
+本项目是一个仿 QQ 音乐界面风格的桌面应用学习作品，重点是本地音频播放、信号与槽、组件化界面和 SQLite 状态保存。项目展示名与仓库名使用 **Qt Music Player / qt-music-player**；工程入口为 `qt-music-player.pro`；窗口类与本地可执行文件仍保留历史名称 `Video_to_MP3_music`。
 
 ## 功能
 
@@ -55,28 +55,22 @@
 
 ```text
 .
-├── Music/                         # 已提交的 Windows 部署目录
-│   ├── Video_to_MP3_music.exe      # 打包程序入口
-│   ├── Qt6*.dll                    # Qt 运行库
-│   ├── platforms/                 # Windows 平台插件
-│   ├── multimedia/                # 音频后端插件
-│   ├── sqldrivers/                # SQLite 等数据库驱动
-│   └── musicDb                    # 初始 SQLite 数据库
-├── Video_to_MP3_music/
-│   ├── Video_to_MP3_music.pro      # qmake 工程文件
-│   ├── main.cpp                   # QApplication 与单实例检查
-│   ├── video_to_mp3_music.*        # 主窗口
-│   ├── music.* / musiclist.*       # 歌曲与歌曲集合
-│   ├── commonpage.* / listitembox.* # 歌单组件
-│   ├── lrcpage.*                   # 歌词组件
-│   ├── musicslider.* / volumetool.* # 播放控件
-│   ├── iamges.qrc / images/        # 界面资源
-│   └── build/                     # 历史构建产物与示例音频
-├── docs/images/                   # README 主题视觉与架构图
-└── 仿qq音乐项目.md                 # 原始开发记录
+├── qt-music-player.pro         # 根 qmake 工程
+├── src/
+│   ├── main.cpp               # QApplication 与单实例检查
+│   ├── app/                   # 主窗口与播放协调
+│   ├── models/                # Music、MusicList
+│   ├── pages/                 # 歌单页面与歌词页面
+│   ├── widgets/               # 列表条目、导航、推荐、进度和音量控件
+│   └── ui/                    # Qt Designer 界面
+├── resources/
+│   ├── images.qrc             # 唯一参与构建的主资源表
+│   └── images/                # 界面图片及原附属资源表
+├── docs/images/               # 主题视觉与架构图
+└── 仿qq音乐项目.md              # 原始开发记录
 ```
 
-历史 `build/` 和 `.pro.user` 含开发环境生成的内容。源码构建请使用新建的构建目录和自己的 Qt Kit。
+原有 `Music/` 发布包在本地保留；历史构建目录迁入 `local-data/history-build/`，个人 Qt Creator 配置保留在 `local-data/qtcreator/`。这些目录、运行数据库和本地音频由忽略规则排除，不随当前 GitHub 源码克隆提供。没有删除历史媒体或数据库，也没有擅自改写其内部路径。
 
 ## 环境与验证状态
 
@@ -89,7 +83,7 @@
 
 播放依赖可用音频输出设备与 Qt 媒体后端；具体支持的音频格式由后端决定。SQLite 文件写在**启动时的工作目录**，该目录需要可写。
 
-本说明已静态核对工程引用、资源文件、部署目录及初始数据库。**本次文档整理没有重新编译源码，也没有在干净 Windows 环境启动打包程序。** 以下提供与当前目录结构一致的操作步骤，不代表所有机器上的运行结果已获验证。当前仓库未提供自动化测试与 CI 配置。
+本次目录重整已在当前 Windows 环境使用 Qt 6.9.2 / MinGW 13.1 完成 Release 编译与链接，构建退出码为 0，产物为 `build-qt-music-player/release/Video_to_MP3_music.exe`。构建出现中文路径相关的 qmake / moc 提示及原有成员初始化顺序警告；本次没有启动播放器、验证实际播放行为或重新生成 Windows 发布包。其他机器与平台尚未复核，当前仓库未提供自动化测试与 CI 配置。
 
 ## 获取项目
 
@@ -98,32 +92,31 @@ git clone https://github.com/759stronger/qt-music-player.git
 cd qt-music-player
 ```
 
-## 运行方式一：Windows 已打包程序
+## 本地已有 Windows 发布包（不随源码克隆提供）
 
-1. 克隆或下载仓库，保留 `Music/` 的完整内容；DLL 与插件目录需要和程序一起保存。
-2. 在仓库根目录打开 PowerShell，执行：
+当前 GitHub 源码仓库不包含预编译 `.exe`、Qt/MinGW DLL、历史构建产物、音乐文件或运行数据库。若只克隆源码，请使用下一节的源码构建方式。
+
+本地整理前已有的 `Music/` 部署目录仍完整保留。持有这份本地包时，保留其全部 DLL 与插件目录，在项目根目录打开 PowerShell：
 
 ```powershell
 Set-Location .\Music
 .\Video_to_MP3_music.exe
 ```
 
-也可以进入 `Music/` 后双击可执行文件。命令方式明确指定工作目录，便于保持数据库位置一致。
+该包来自历史构建，本次目录整理没有重新打包它。程序把 `musicDb` 保存在启动工作目录中；导入记录保存本地音频路径，不会把音频复制到数据库。移动音频后，旧记录不会自动跟随更新。
 
-`Music/musicDb` 的初始 `musicInfo` 表为空；首次打开后请导入自己的音频。导入不会把音频复制进数据库，数据库保存的是文件路径。移动音频后，旧记录不会自动跟随更新。
-
-若提示缺少 DLL 或平台插件，先检查是否只复制了 `.exe`、部署子目录是否完整。若窗口未出现，也检查托盘是否已有实例；程序使用共享内存避免重复运行。
+若提示缺少 DLL 或平台插件，检查部署子目录是否完整；窗口未出现时也检查托盘是否已有实例。没有本地 `Music/` 包时，不要将其缺失当成源码下载不完整，应从源码构建。
 
 ## 运行方式二：从源码构建
 
 ### 使用 Qt Creator
 
 1. 安装 Qt 6.9.2 的 MinGW 64-bit 开发组件，包含 Qt Multimedia 与 Qt SQL。
-2. 用 Qt Creator 打开 `Video_to_MP3_music/Video_to_MP3_music.pro`。
+2. 用 Qt Creator 打开 `qt-music-player.pro`。
 3. 选择对应的 **Desktop Qt 6.9.2 MinGW 64-bit Kit**，设置一个新的独立构建目录。
 4. 选择 Release 配置，构建并运行。设置工作目录时选择可写位置；该位置用于保存 `musicDb`。
 
-不要直接依赖仓库里已有的 `.pro.user`、Makefile 或历史构建缓存；它们来自原开发环境。
+不要使用 `local-data/` 中的个人配置、Makefile 或历史构建缓存进行新构建；它们只作为原环境资料保留。
 
 ### 使用 qmake 命令
 
@@ -132,7 +125,7 @@ Set-Location .\Music
 ```powershell
 New-Item -ItemType Directory -Path .\build-qt-music-player -Force
 Set-Location .\build-qt-music-player
-qmake ..\Video_to_MP3_music\Video_to_MP3_music.pro "CONFIG+=release"
+qmake ..\qt-music-player.pro "CONFIG+=release"
 mingw32-make release
 .\release\Video_to_MP3_music.exe
 ```
@@ -168,4 +161,4 @@ Qt、FFmpeg 及其他随包依赖有各自的许可证与分发条件；再次�
 
 ## 文档依据
 
-本 README 按提交 `1d7eacc7a0fc0bf2e21dc411d26dbcb4ec0dbf5d` 的源码、资源与部署目录整理。原始学习过程见 [开发记录](仿qq音乐项目.md)；后续功能变化应同步更新本文。
+原功能说明按提交 `1d7eacc7a0fc0bf2e21dc411d26dbcb4ec0dbf5d` 整理；本次以 `18c35c7a82b4f8d2dd18421ed5e258768a2bb353` 为同步基线重整目录与 qmake 配置，没有扩展业务功能。原始学习过程见 [开发记录](仿qq音乐项目.md)；后续功能变化应同步更新本文。
