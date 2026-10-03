@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="850" viewBox="0 0 1600 850" role="img" aria-labelledby="title desc">
+  <title id="title">Qt Music Player：本地音频、播放、歌词与状态保存</title>
+  <desc id="desc">本地音频由 MusicList 校验去重、Music 读取元数据，经主窗口协调后交给 QMediaPlayer 与 QAudioOutput 播放。播放位置驱动 LrcPage；SQLite 在启动时恢复记录，托盘退出时保存歌曲、收藏与历史。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#167b87"/></marker>
+    <style>text{font-family:'Microsoft YaHei','Noto Sans CJK SC',Arial,sans-serif;fill:#17324d}.title{font-size:42px;font-weight:700}.sub{font-size:25px;fill:#567084}.label{font-size:28px;font-weight:700}.body{font-size:23px}.small{font-size:21px;fill:#567084}.line{fill:none;stroke:#167b87;stroke-width:4;marker-end:url(#arrow)}.dash{stroke-dasharray:10 8}</style>
+  </defs>
+  <rect width="1600" height="850" fill="#f6fafc"/>
+  <text x="70" y="78" class="title">Qt Music Player · 让一首本地歌曲完成播放旅程</text>
+  <text x="70" y="120" class="sub">源码原理图 · 图中是组件关系，非运行界面截图</text>
+  <rect x="70" y="190" width="260" height="150" rx="24" fill="#fff0e9" stroke="#edbaa5"/>
+  <text x="100" y="245" class="label">① 本地音频</text><text x="100" y="292" class="body">文件 URL / 同名 .lrc</text>
+  <rect x="420" y="190" width="320" height="150" rx="24" fill="#e8f6f3" stroke="#9dd9cf"/>
+  <text x="450" y="245" class="label">② Music / MusicList</text><text x="450" y="292" class="body">音频校验 · 去重 · 元数据</text>
+  <rect x="830" y="190" width="300" height="150" rx="24" fill="#e9effb" stroke="#b1c5e8"/>
+  <text x="860" y="245" class="label">③ 主窗口协调</text><text x="860" y="292" class="body">歌单 · 收藏 · 播放操作</text>
+  <rect x="1220" y="190" width="310" height="150" rx="24" fill="#e8f6f3" stroke="#9dd9cf"/>
+  <text x="1250" y="241" class="label">④ Qt Multimedia</text><text x="1250" y="285" class="body">QMediaPlayer</text><text x="1250" y="319" class="body">QAudioOutput</text>
+  <path d="M330 265H420" class="line"/><path d="M740 265H830" class="line"/><path d="M1130 265H1220" class="line"/>
+  <rect x="420" y="510" width="320" height="140" rx="24" fill="#fff7dd" stroke="#e5ce82"/>
+  <text x="450" y="562" class="label">SQLite · musicDb</text><text x="450" y="607" class="body">歌曲 / 收藏 / 最近播放</text>
+  <path d="M565 510V350" class="line"/><text x="350" y="430" class="small">启动时恢复记录</text>
+  <path d="M995 340V580H755" class="line"/><text x="775" y="528" class="small">托盘“退出”时写入</text>
+  <rect x="1220" y="510" width="310" height="140" rx="24" fill="#e9effb" stroke="#b1c5e8"/>
+  <text x="1250" y="555" class="label">LrcPage · 歌词同步</text><text x="1250" y="592" class="body">读取本地歌词</text><text x="1250" y="625" class="body">定位当前行</text>
+  <path d="M1370 340V510" class="line"/><text x="1235" y="438" class="small">播放位置变化</text>
+  <path d="M200 340V710H1370V665" class="line dash"/><text x="665" y="742" class="small">同名 .lrc 文件提供歌词内容</text>
+  <rect x="70" y="778" width="1460" height="45" rx="12" fill="#e8eff3"/>
+  <text x="90" y="809" class="small">阅读提示：音频来自本地；推荐页是本地图片；当前状态保存依赖托盘退出流程。</text>
+</svg>
